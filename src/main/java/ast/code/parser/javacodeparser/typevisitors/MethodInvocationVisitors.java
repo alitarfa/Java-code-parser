@@ -1,4 +1,4 @@
-package ast.code.parser.javacodeparser.Types;
+package ast.code.parser.javacodeparser.typevisitors;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.MethodInvocation;
@@ -13,7 +13,7 @@ public class MethodInvocationVisitors extends ASTVisitor {
     @Override
     public boolean visit(MethodInvocation node) {
         methods.add(node);
-        return super.visit(node);
+        return true;
     }
 
     public Set<MethodInvocation> getMethods() {

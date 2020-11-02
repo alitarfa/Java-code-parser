@@ -1,6 +1,6 @@
 package ast.code.parser.javacodeparser;
 
-import ast.code.parser.javacodeparser.Types.ClassVisitors;
+import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import java.util.Map;

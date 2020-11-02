@@ -1,4 +1,4 @@
-package ast.code.parser.javacodeparser.Types;
+package ast.code.parser.javacodeparser.typevisitors;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.TypeDeclaration;

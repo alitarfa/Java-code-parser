@@ -1,9 +1,9 @@
 package ast.code.parser.javacodeparser;
 
-import ast.code.parser.javacodeparser.Types.ClassVisitors;
-import ast.code.parser.javacodeparser.Types.MethodVisitors;
-import ast.code.parser.javacodeparser.Types.PackageVisitors;
-import ast.code.parser.javacodeparser.Types.VariableVisitors;
+import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
+import ast.code.parser.javacodeparser.typevisitors.MethodVisitors;
+import ast.code.parser.javacodeparser.typevisitors.PackageVisitors;
+import ast.code.parser.javacodeparser.typevisitors.VariableVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;

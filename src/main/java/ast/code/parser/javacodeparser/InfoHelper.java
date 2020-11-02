@@ -1,10 +1,10 @@
 package ast.code.parser.javacodeparser;
 
 
-import ast.code.parser.javacodeparser.Types.ClassVisitors;
-import ast.code.parser.javacodeparser.Types.MethodInvocationVisitors;
-import ast.code.parser.javacodeparser.Types.MethodVisitors;
-import ast.code.parser.javacodeparser.Types.VariableVisitors;
+import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
+import ast.code.parser.javacodeparser.typevisitors.MethodInvocationVisitors;
+import ast.code.parser.javacodeparser.typevisitors.MethodVisitors;
+import ast.code.parser.javacodeparser.typevisitors.VariableVisitors;
 import org.eclipse.jdt.core.dom.*;
 
 public class InfoHelper {

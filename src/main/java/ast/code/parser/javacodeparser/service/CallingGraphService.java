@@ -1,23 +1,38 @@
-package ast.code.parser.javacodeparser;
+package ast.code.parser.javacodeparser.service;
 
+import ast.code.parser.javacodeparser.FileHandler;
+import ast.code.parser.javacodeparser.ParserFactory;
 import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
 import ast.code.parser.javacodeparser.typevisitors.MethodInvocationVisitors;
 import ast.code.parser.javacodeparser.typevisitors.MethodVisitors;
+import lombok.AllArgsConstructor;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CallingGraph {
+@Service
+@AllArgsConstructor
+public class CallingGraphService {
 
     private Set<Map.Entry<String, String>> entries = new HashSet<>();
 
-    public Set<Map.Entry<String, String>> generateGraph(ClassVisitors classVisitors) {
-        classVisitors.getClasses()
-                .forEach(typeDeclaration -> {
+    public Set<Map.Entry<String, String>> generateGraph(String projectPath) {
+        List<File> projectFiles = FileHandler.readJavaFiles(new File(projectPath));
+        ClassVisitors classVisitors = new ClassVisitors();
+        projectFiles.forEach(file -> {
+            try {
+                String content = FileHandler.read(file.getAbsolutePath());
+                CompilationUnit result = ParserFactory.getInstance(content);
+                result.accept(classVisitors);
+                classVisitors.getClasses().forEach(typeDeclaration -> {
                     MethodVisitors methodVisitors = new MethodVisitors();
                     typeDeclaration.accept(methodVisitors);
                     methodVisitors.getMethods()
@@ -44,6 +59,11 @@ public class CallingGraph {
                             });
 
                 });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         return entries;
     }
+
 }
