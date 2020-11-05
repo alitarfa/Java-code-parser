@@ -23,7 +23,7 @@ public class ParserFactory {
         parser.setSource(content.toCharArray());
         CompilationUnit instance = (CompilationUnit) parser.createAST(null);
         if (instance.getAST().hasBindingsRecovery()) {
-            System.out.println("Binding activated.");
+          //  System.out.println("Binding activated.");
         }
         return instance;
     }

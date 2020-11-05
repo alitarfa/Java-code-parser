@@ -1,10 +1,9 @@
 package ast.code.parser.javacodeparser;
 
+import ast.code.parser.javacodeparser.service.DependencyGraphService;
 import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import java.util.Map;
-import java.util.Set;
 
 public class ASTMain2 {
 
@@ -13,10 +12,7 @@ public class ASTMain2 {
         CompilationUnit instance = ParserFactory.getInstance(read);
         ClassVisitors classVisitors = new ClassVisitors();
         instance.accept(classVisitors);
-        CallingGraph callingGraph = new CallingGraph();
-        Set<Map.Entry<String, String>> stringStringMap = callingGraph.generateGraph(classVisitors);
-        stringStringMap.forEach(stringStringEntry -> {
-            System.out.println(stringStringEntry.getKey() + " -----> " + stringStringEntry.getValue());
-        });
+        DependencyGraphService dependencyGraphService = new DependencyGraphService();
+        dependencyGraphService.generateDependencyGraph("/home/tarfa/MySpace/Tekit/soon-back");
     }
 }
