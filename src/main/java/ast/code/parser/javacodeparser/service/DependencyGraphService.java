@@ -22,17 +22,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class DependencyGraphService {
 
-    private Set<Map.Entry<String, String>> entries = new HashSet<>();
-    private Set<Map<String, Set<String>>> maps = new HashSet<>();
-    private Set<String> strings = new HashSet<>();
-
-    private Set<DependencyModel> dependencyModels = new HashSet<>();
+    private final Set<DependencyModel> dependencyModels = new HashSet<>();
 
     public Set<DependencyModel> generateDependencyGraph(String projectPath) {
         List<File> projectFiles = FileHandler.readJavaFiles(new File(projectPath));
 
         ClassVisitors classVisitors = new ClassVisitors();
-        projectFiles.stream().forEach(file -> {
+        projectFiles.forEach(file -> {
             try {
                 String content = FileHandler.read(file.getAbsolutePath());
                 CompilationUnit result = ParserFactory.getInstance(content);
@@ -40,7 +36,6 @@ public class DependencyGraphService {
                 classVisitors.getClasses().forEach(typeDeclaration -> {
                     DependencyModel dependencyModel = new DependencyModel();
                     dependencyModel.setClassName(typeDeclaration.getName().toString());
-                    Map<String, Set<String>> setMap = new HashMap<>();
                     MethodInvocationVisitors methodInvocationVisitors = new MethodInvocationVisitors();
                     typeDeclaration.accept(methodInvocationVisitors);
                     Set<String> collect = methodInvocationVisitors.getMethods()
@@ -51,7 +46,6 @@ public class DependencyGraphService {
                             .filter(Objects::nonNull)
                             .map(ITypeBinding::getName)
                             .collect(Collectors.toSet());
-                    //setMap.put(typeDeclaration.getName().toString(), collect);
                     dependencyModel.setDependencies(collect);
                     dependencyModels.add(dependencyModel);
                 });
