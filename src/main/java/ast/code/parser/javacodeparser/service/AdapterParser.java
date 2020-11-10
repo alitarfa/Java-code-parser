@@ -32,8 +32,8 @@ public class AdapterParser {
             //String content = FileHandler.read("/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/InitializationActivity.java");
             //String content = FileHandler.read("/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/UpdateAppActivity.java");
             //String content = FileHandler.read("/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/VisuEntityDetailActivity.java");
-            String content = FileHandler.read("/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/AbstractEntityDetailFragment.java");
-            //String content = FileHandler.read("/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/utils/adapter/DetailFragmentPagerAdapter.java");
+            //String content = FileHandler.read("/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/AbstractEntityDetailFragment.java");
+            String content = FileHandler.read("/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/utils/adapter/DetailFragmentPagerAdapter.java");
             CompilationUnit result = ParserFactory.getInstance(content);
             result.accept(classVisitor);
             /**
