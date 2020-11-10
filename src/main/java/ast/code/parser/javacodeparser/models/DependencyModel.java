@@ -11,5 +11,7 @@ import java.util.Set;
 @ToString
 public class DependencyModel {
     private String className;
+    private ClassType classType;
     private Set<String> dependencies;
+    private Set<String> methods;
 }

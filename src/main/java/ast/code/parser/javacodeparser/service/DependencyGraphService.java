@@ -6,7 +6,6 @@ import ast.code.parser.javacodeparser.models.DependencyModel;
 import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
 import ast.code.parser.javacodeparser.typevisitors.MethodInvocationVisitors;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ITypeBinding;
@@ -14,12 +13,14 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class DependencyGraphService {
 
     private final Set<DependencyModel> dependencyModels = new HashSet<>();
