@@ -10,6 +10,7 @@ public enum ClassType {
     FRAGMENT,
     ASYNC_TASK,
     SUPPER_CLASS,
+    SERVICE,
     ADAPTER;
 
     public static boolean isActivity(TypeDeclaration type) {

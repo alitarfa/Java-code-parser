@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class ViewResolver {
 
-    public static void findActivityView(TypeDeclaration typeDeclaration) {
+    public static Set<String> findActivityView(TypeDeclaration typeDeclaration) {
         MethodVisitors methodVisitors = new MethodVisitors();
         typeDeclaration.accept(methodVisitors);
         Set<String> collect = methodVisitors.getMethods().stream()
@@ -26,6 +26,6 @@ public class ViewResolver {
                 .map(s -> s.split("\\."))
                 .map(strings -> strings[strings.length - 1])
                 .collect(Collectors.toSet());
-        collect.forEach(System.out::println);
+        return collect;
     }
 }

@@ -13,5 +13,6 @@ public class DependencyModel {
     private String className;
     private ClassType classType;
     private Set<String> dependencies;
+    private Set<String> views;
     private Set<String> methods;
 }
