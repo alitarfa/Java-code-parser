@@ -1,4 +1,4 @@
-package ast.code.parser.javacodeparser;
+package ast.code.parser.javacodeparser.service;
 
 import java.io.File;
 import java.io.IOException;

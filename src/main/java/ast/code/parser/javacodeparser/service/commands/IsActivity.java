@@ -76,6 +76,18 @@ public class IsActivity implements Command<DependencyModel> {
                 .map(ITypeBinding::getName)
                 .collect(Collectors.toSet());
 
+        Set<String> packages = methodInvocationVisitors.getMethods()
+                .stream()
+                .map(MethodInvocation::getExpression)
+                .filter(Objects::nonNull)
+                .map(Expression::resolveTypeBinding)
+                .filter(Objects::nonNull)
+                .map(iTypeBinding -> {
+                    IPackageBinding aPackage = iTypeBinding.getPackage();
+                    return aPackage.getName();
+                })
+                .collect(Collectors.toSet());
+
         VariableVisitors variableVisitors = new VariableVisitors();
         typeDeclaration.accept(variableVisitors);
         Set<String> variableListTyped = variableVisitors.getFields()

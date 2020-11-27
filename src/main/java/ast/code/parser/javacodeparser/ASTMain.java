@@ -1,5 +1,7 @@
 package ast.code.parser.javacodeparser;
 
+import ast.code.parser.javacodeparser.service.ClassStatistics;
+import ast.code.parser.javacodeparser.service.FileHandler;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 

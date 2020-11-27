@@ -1,4 +1,4 @@
-package ast.code.parser.javacodeparser;
+package ast.code.parser.javacodeparser.service;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;

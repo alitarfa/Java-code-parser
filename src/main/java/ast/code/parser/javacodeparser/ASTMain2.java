@@ -1,6 +1,8 @@
 package ast.code.parser.javacodeparser;
 
 import ast.code.parser.javacodeparser.service.DependencyGraphService;
+import ast.code.parser.javacodeparser.service.FileHandler;
+import ast.code.parser.javacodeparser.service.ParserFactory;
 import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 

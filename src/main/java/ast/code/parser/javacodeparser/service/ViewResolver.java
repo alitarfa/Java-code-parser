@@ -15,7 +15,7 @@ public class ViewResolver {
     public static Set<String> findActivityView(TypeDeclaration typeDeclaration) {
         MethodVisitors methodVisitors = new MethodVisitors();
         typeDeclaration.accept(methodVisitors);
-        Set<String> collect = methodVisitors.getMethods().stream()
+        return methodVisitors.getMethods().stream()
                 .filter(method -> method.getName().toString().equalsIgnoreCase("onCreate"))
                 .map(MethodDeclaration::getBody)
                 .map(ASTNode::toString)
@@ -26,6 +26,22 @@ public class ViewResolver {
                 .map(s -> s.split("\\."))
                 .map(strings -> strings[strings.length - 1])
                 .collect(Collectors.toSet());
-        return collect;
+    }
+
+    public static Set<String> findFragmentView(TypeDeclaration typeDeclaration) {
+        // TODO: 25/11/2020 this not yet tested, test it first
+        MethodVisitors methodVisitors = new MethodVisitors();
+        typeDeclaration.accept(methodVisitors);
+        return methodVisitors.getMethods().stream()
+                .filter(method -> method.getName().toString().equalsIgnoreCase("onCreateView"))
+                .map(MethodDeclaration::getBody)
+                .map(ASTNode::toString)
+                .map(body -> body.split(";"))
+                .map(Arrays::asList)
+                .flatMap(Collection::stream)
+                .filter(s -> s.contains("?????????????????????"))
+                .map(s -> s.split("\\."))
+                .map(strings -> strings[strings.length - 1])
+                .collect(Collectors.toSet());
     }
 }

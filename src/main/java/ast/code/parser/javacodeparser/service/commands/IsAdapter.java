@@ -47,7 +47,6 @@ public class IsAdapter implements Command<DependencyModel> {
                 .map(parameterizedType -> parameterizedType.typeArguments().get(0).toString())
                 .collect(Collectors.toSet());
 
-
         dependencyModel.setDependencies(collect);
         dependencyModel.getDependencies().addAll(variableListTyped);
         Set<String> filtered = dependencyModel.getDependencies()

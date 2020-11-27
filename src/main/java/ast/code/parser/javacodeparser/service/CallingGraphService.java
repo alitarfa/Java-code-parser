@@ -1,7 +1,5 @@
 package ast.code.parser.javacodeparser.service;
 
-import ast.code.parser.javacodeparser.FileHandler;
-import ast.code.parser.javacodeparser.ParserFactory;
 import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
 import ast.code.parser.javacodeparser.typevisitors.MethodInvocationVisitors;
 import ast.code.parser.javacodeparser.typevisitors.MethodVisitors;

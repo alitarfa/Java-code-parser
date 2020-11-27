@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static ast.code.parser.javacodeparser.models.ClassType.SERVICE;
 import static ast.code.parser.javacodeparser.utils.Utils.unsupported;
 
-public class IsService implements Command {
+public class IsService implements Command<DependencyModel> {
 
     private final TypeDeclaration typeDeclaration;
     private final DependencyModel dependencyModel = new DependencyModel();
@@ -47,7 +47,6 @@ public class IsService implements Command {
                 .map(fieldDeclaration -> (ParameterizedType) fieldDeclaration.getType())
                 .map(parameterizedType -> parameterizedType.typeArguments().get(0).toString())
                 .collect(Collectors.toSet());
-
 
         dependencyModel.setDependencies(collect);
         dependencyModel.getDependencies().addAll(variableListTyped);

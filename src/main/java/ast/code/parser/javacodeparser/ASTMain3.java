@@ -1,5 +1,6 @@
 package ast.code.parser.javacodeparser;
 
+import ast.code.parser.javacodeparser.service.FileHandler;
 import ast.code.parser.javacodeparser.visitors.MethodInvocationImp;
 import ast.code.parser.javacodeparser.visitors.TypeDeclarationImp;
 import com.github.javaparser.StaticJavaParser;
@@ -14,14 +15,11 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSol
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
-import com.github.javaparser.symbolsolver.utils.SymbolSolverCollectionStrategy;
-import com.github.javaparser.utils.ProjectRoot;
 import org.jboss.shrinkwrap.resolver.api.Resolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 

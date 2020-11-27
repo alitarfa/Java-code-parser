@@ -1,7 +1,5 @@
 package ast.code.parser.javacodeparser.service;
 
-import ast.code.parser.javacodeparser.FileHandler;
-import ast.code.parser.javacodeparser.ParserFactory;
 import ast.code.parser.javacodeparser.models.DependencyModel;
 import ast.code.parser.javacodeparser.service.commands.*;
 import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
@@ -9,7 +7,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +26,9 @@ public class ActivityParser {
                 "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/VisuEntityDetailActivity.java",
                 "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/utils/adapter/DetailFragmentPagerAdapter.java"
         );
+
+
+        // cluster A ---> dependencies + view
 
         ClassVisitors classVisitor = new ClassVisitors();
         listFiles.forEach(file -> {
@@ -60,6 +60,12 @@ public class ActivityParser {
 
                     if (isAdapter(cls) && !cls.isInterface()) {
                         DependencyModel dependencyModel = new IsAdapter(cls).apply();
+                        listMetaDataClasses.add(dependencyModel);
+                    }
+
+                    if (isClassJava(cls) && !cls.isInterface()) {
+                        // this mean it's simple class
+                        DependencyModel dependencyModel = new IsClass(cls).apply();
                         listMetaDataClasses.add(dependencyModel);
                     }
                 }
