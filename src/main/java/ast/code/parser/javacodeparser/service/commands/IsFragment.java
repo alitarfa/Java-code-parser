@@ -2,6 +2,7 @@ package ast.code.parser.javacodeparser.service.commands;
 
 import ast.code.parser.javacodeparser.models.ClassType;
 import ast.code.parser.javacodeparser.models.DependencyModel;
+import ast.code.parser.javacodeparser.service.ViewResolver;
 import ast.code.parser.javacodeparser.typevisitors.MethodInvocationVisitors;
 import ast.code.parser.javacodeparser.typevisitors.MethodVisitors;
 import ast.code.parser.javacodeparser.typevisitors.VariableVisitors;
@@ -25,6 +26,7 @@ public class IsFragment implements Command<DependencyModel> {
     public DependencyModel apply() {
         dependencyModel.setClassName(typeDeclaration.getName().toString());
         dependencyModel.setClassType(ClassType.FRAGMENT);
+        dependencyModel.setFragmentViews(ViewResolver.findFragmentView(typeDeclaration));
         MethodVisitors methodVisitor = new MethodVisitors();
         typeDeclaration.accept(methodVisitor);
         MethodInvocationVisitors methodInvocationVisitors = new MethodInvocationVisitors();

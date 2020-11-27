@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,14 +41,13 @@ public class ProjectParser {
                     if (isActivity(cls) && !cls.isInterface()) {
                         DependencyModel dependencyModel = new IsActivity(cls).apply();
                         information.getDependencies().addAll(dependencyModel.getDependencies());
-                        information.getView().addAll(dependencyModel.getViews());
-                        information.getView().addAll(dependencyModel.getViews());
+                        information.getActivityViews().addAll(dependencyModel.getActivityViews());
                     }
 
                     if (isFragment(cls) && !cls.isInterface()) {
-                        // TODO: 25/11/2020 is to write the code that will find the view
                         DependencyModel dependencyModel = new IsFragment(cls).apply();
                         information.getDependencies().addAll(dependencyModel.getDependencies());
+                        information.getFragmentView().addAll(dependencyModel.getFragmentViews());
                     }
 
                     if (isService(cls) && !cls.isInterface()) {
@@ -100,14 +100,23 @@ public class ProjectParser {
     /**
      * Copy the file to a specific directory that hold the same name of the original one
      *
-     * @param source      path of file to be copied
+     * @param sources     list of files to be copied
      * @param destination path of where we gonna copy the original file
      * @throws IOException
      */
-    public void copyTo(String source, String destination) throws IOException {
-        Path sourcePath = new File(source).toPath();
-        String destinationName = source.split("/")[source.split("/").length - 1];
-        Path destinationPath = new File(destination + "/" + destinationName).toPath();
-        Files.copy(sourcePath, destinationPath);
+    public void copyTo(List<String> sources, String destination) {
+        sources.forEach(source -> {
+            try {
+                Path sourcePath = new File(source).toPath();
+                String destinationName = source.split("/")[source.split("/").length - 1];
+                Path destinationPath = new File(destination + "/" + destinationName).toPath();
+                if (!destinationPath.toFile().exists()) {
+                    Files.copy(sourcePath, destinationPath);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 }

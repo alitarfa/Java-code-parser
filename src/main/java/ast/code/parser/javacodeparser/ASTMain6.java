@@ -1,14 +1,14 @@
 package ast.code.parser.javacodeparser;
 
 
-import ast.code.parser.javacodeparser.service.FileHandler;
-import ast.code.parser.javacodeparser.service.PathResolver;
-import ast.code.parser.javacodeparser.service.ProjectParser;
+import ast.code.parser.javacodeparser.models.Information;
+import ast.code.parser.javacodeparser.service.*;
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -17,11 +17,19 @@ import java.util.stream.Collectors;
 
 public class ASTMain6 {
 
+    /**
+     * This Class helps to get the all dependencies of given cluster
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
 
         Set<String> deps = new HashSet<>();
-        Set<String> paths = new HashSet<>();
-
+        String projectPath = "/home/tarfa/Phd/carl-mob-app";
+        String layoutPathDestination = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/res/layout";
+        String srcJavaPathDestination = "";
+        List<File> projectFiles = FileHandler.readJavaFiles(new File(projectPath));
         Set<String> listClasses = new java.util.HashSet<>(Set.of(
                 "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/InitializationActivity.java",
                 "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/UpdateAppActivity.java",
@@ -29,7 +37,11 @@ public class ASTMain6 {
                 "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/utils/adapter/DetailFragmentPagerAdapter.java"
         ));
 
+        // todo Don't forget the Kotlin code
+        // todo Don't forget the DTO Module we need to find a solution to get the DTO
+
         ProjectParser projectParser = new ProjectParser();
+
         for (int i = 0; i < 10; i++) {
             listClasses.forEach(s -> {
                 try {
@@ -39,31 +51,23 @@ public class ASTMain6 {
                     e.printStackTrace();
                 }
             });
-            String pathProject = "/home/tarfa/Phd/carl-mob-app/android/src/main/java";
-            List<File> projectFiles = FileHandler.readJavaFiles(new File(pathProject));
 
-            Set<String> collect = deps.stream()
+            Set<String> pathClasses = deps.stream()
                     .map(s -> PathResolver.getPath(projectFiles, s))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toSet());
-            listClasses.addAll(collect);
+            listClasses.addAll(pathClasses);
         }
-        listClasses.forEach(System.out::println);
 
-        // todo The Construction of the application
-        // 1- copy the depends to the Android project
-        // 2- find the views of Activities and Fragments
-        // 3- copy the the views to the Android project
-        // 4- copy the other resources to from the old project to the new One
+        Information parse = projectParser.parse(listClasses);
+        List<String> fragmentViewPaths = PathResolver.getPaths(projectPath, parse.getFragmentView());
+        List<String> activityViewPaths = PathResolver.getPaths(projectPath, parse.getActivityViews());
 
+        // copy the
+        projectParser.copyTo(activityViewPaths, layoutPathDestination);
 
-        listClasses.forEach(s -> {
-            try {
-                projectParser.copyTo(s, "/home/tarfa/MySpace/TestCopy");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        // TODO: 27/11/2020 in the from work on steps to present all stpes
+        // reading files parsing finding dependes and finding path and .....
 
     }
 

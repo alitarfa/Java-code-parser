@@ -8,5 +8,6 @@ import java.util.Set;
 @Data
 public class Information {
     private Set<String> dependencies = new HashSet<>();
-    private Set<String> view = new HashSet<>();
+    private Set<String> activityViews = new HashSet<>();
+    private Set<String> fragmentView = new HashSet<>();
 }

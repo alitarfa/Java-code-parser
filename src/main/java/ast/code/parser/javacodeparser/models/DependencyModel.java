@@ -14,5 +14,8 @@ public class DependencyModel {
     private ClassType classType;
     private Set<String> dependencies;
     private Set<String> views;
+    private Set<String> activityViews;
+    private Set<String> fragmentViews;
     private Set<String> methods;
+
 }

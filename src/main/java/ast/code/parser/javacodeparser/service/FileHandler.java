@@ -32,4 +32,16 @@ public class FileHandler {
         }
         return javaFiles;
     }
+
+    public static List<File> readXmlFiles(File folder) {
+        List<File> xmlFile = new ArrayList<>();
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            if (file.isDirectory()) {
+                xmlFile.addAll(readXmlFiles(file));
+            } else if (file.getName().endsWith(".xml")) {
+                xmlFile.add(file);
+            }
+        }
+        return xmlFile;
+    }
 }

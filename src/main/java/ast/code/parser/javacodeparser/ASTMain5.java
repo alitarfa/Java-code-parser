@@ -27,7 +27,6 @@ public class ASTMain5 {
             Information parse = projectParser.parse(listClasses);
             parse.getDependencies().forEach(System.out::println);
             System.out.println("****************** views *********************");
-            parse.getView().forEach(System.out::println);
             // get path of each depends
             Set<String> collect = parse.getDependencies()
                     .stream()
