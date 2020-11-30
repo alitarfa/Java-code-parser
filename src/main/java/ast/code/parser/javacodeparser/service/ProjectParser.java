@@ -104,12 +104,13 @@ public class ProjectParser {
      * @param destination path of where we gonna copy the original file
      * @throws IOException
      */
-    public void copyTo(List<String> sources, String destination) {
+    public void copyTo(Set<String> sources, String destination) {
         sources.forEach(source -> {
             try {
                 Path sourcePath = new File(source).toPath();
                 String destinationName = source.split("/")[source.split("/").length - 1];
-                Path destinationPath = new File(destination + "/" + destinationName).toPath();
+                String newPath = source.replace("/home/tarfa/Phd/carl-mob-app/android/src/main/java", destination);
+                Path destinationPath = new File(newPath).toPath();
                 if (!destinationPath.toFile().exists()) {
                     Files.copy(sourcePath, destinationPath);
                 }
@@ -119,4 +120,5 @@ public class ProjectParser {
         });
 
     }
+
 }

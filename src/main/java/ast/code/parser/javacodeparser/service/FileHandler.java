@@ -26,7 +26,7 @@ public class FileHandler {
         for (File file : Objects.requireNonNull(folder.listFiles())) {
             if (file.isDirectory()) {
                 javaFiles.addAll(readJavaFiles(file));
-            } else if (file.getName().endsWith(".java")) {
+            } else if (file.getName().endsWith(".java") || file.getName().endsWith(".kt")) {
                 javaFiles.add(file);
             }
         }

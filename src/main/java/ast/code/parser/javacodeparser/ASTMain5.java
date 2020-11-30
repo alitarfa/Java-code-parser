@@ -28,7 +28,7 @@ public class ASTMain5 {
             parse.getDependencies().forEach(System.out::println);
             System.out.println("****************** views *********************");
             // get path of each depends
-            Set<String> collect = parse.getDependencies()
+          /*  Set<String> collect = parse.getDependencies()
                     .stream()
                     .map(s -> {
                         String pathProject = "/home/tarfa/Phd/carl-mob-app/android/src/main/java";
@@ -36,8 +36,8 @@ public class ASTMain5 {
                         return PathResolver.getPath(projectFiles, s);
                     })
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());
-            listClasses.addAll(collect);
+                    .collect(Collectors.toSet());*/
+            //listClasses.addAll(collect);
         }
     }
 }

@@ -25,11 +25,8 @@ public class ASTMain6 {
      */
     public static void main(String[] args) throws Exception {
 
-        Set<String> deps = new HashSet<>();
         String projectPath = "/home/tarfa/Phd/carl-mob-app";
         String layoutPathDestination = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/res/layout";
-        String srcJavaPathDestination = "";
-        List<File> projectFiles = FileHandler.readJavaFiles(new File(projectPath));
         Set<String> listClasses = new java.util.HashSet<>(Set.of(
                 "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/InitializationActivity.java",
                 "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/UpdateAppActivity.java",
@@ -41,33 +38,26 @@ public class ASTMain6 {
         // todo Don't forget the DTO Module we need to find a solution to get the DTO
 
         ProjectParser projectParser = new ProjectParser();
+        PathResolver pathResolver = new PathResolver(projectParser);
+        // first step: find the Paths of All dependencies
+        Set<String> paths = pathResolver.findPaths(projectPath, listClasses, 10);
 
-        for (int i = 0; i < 10; i++) {
-            listClasses.forEach(s -> {
-                try {
-                    Set<String> strings = projectParser.parse_v2(s);
-                    deps.addAll(strings);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        // second step: Create the packages
+        String source = "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch";
+        String target = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java/";
+        pathResolver.generatePackages(source, target);
 
-            Set<String> pathClasses = deps.stream()
-                    .map(s -> PathResolver.getPath(projectFiles, s))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());
-            listClasses.addAll(pathClasses);
-        }
+        //third step: copy the files to new packages
+        projectParser.copyTo(paths, "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java");
 
         Information parse = projectParser.parse(listClasses);
-        List<String> fragmentViewPaths = PathResolver.getPaths(projectPath, parse.getFragmentView());
-        List<String> activityViewPaths = PathResolver.getPaths(projectPath, parse.getActivityViews());
+        // find fragment views
+        List<String> fragmentViewPaths = pathResolver.getPaths(projectPath, parse.getFragmentView());
+        projectParser.copyTo(new HashSet<>(fragmentViewPaths), layoutPathDestination);
 
-        // copy the
-        projectParser.copyTo(activityViewPaths, layoutPathDestination);
-
-        // TODO: 27/11/2020 in the from work on steps to present all stpes
-        // reading files parsing finding dependes and finding path and .....
+        // find Activities views
+        List<String> activityViewPaths = pathResolver.getPaths(projectPath, parse.getActivityViews());
+        projectParser.copyTo(new HashSet<>(activityViewPaths), layoutPathDestination);
 
     }
 
