@@ -2,18 +2,12 @@ package ast.code.parser.javacodeparser;
 
 
 import ast.code.parser.javacodeparser.models.Information;
-import ast.code.parser.javacodeparser.service.*;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import ast.code.parser.javacodeparser.service.PathResolver;
+import ast.code.parser.javacodeparser.service.ProjectParser;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ASTMain6 {
 
@@ -47,7 +41,7 @@ public class ASTMain6 {
         String target = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java/";
         pathResolver.generatePackages(source, target);
 
-        //third step: copy the files to new packages
+        // third step: copy the files to new packages
         projectParser.copyTo(paths, "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java");
 
         Information parse = projectParser.parse(listClasses);
