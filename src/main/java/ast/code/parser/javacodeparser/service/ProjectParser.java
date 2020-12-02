@@ -104,6 +104,21 @@ public class ProjectParser {
      * @param destination path of where we gonna copy the original file
      * @throws IOException
      */
+    public void copyToLayout(Set<String> sources, String destination) {
+        sources.forEach(source -> {
+            try {
+                Path sourcePath = new File(source).toPath();
+                String destinationName = source.split("/")[source.split("/").length - 1];
+                Path destinationPath = new File(destination + "/" + destinationName).toPath();
+                if (!destinationPath.toFile().exists()) {
+                    Files.copy(sourcePath, destinationPath);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void copyTo(Set<String> sources, String destination) {
         sources.forEach(source -> {
             try {
@@ -118,7 +133,35 @@ public class ProjectParser {
                 e.printStackTrace();
             }
         });
-
     }
 
+    public void packageReplacement(String projectPath) {
+        List<File> files = FileHandler.readJavaFiles(new File(projectPath));
+        files.forEach(file -> {
+            List<String> collect = null;
+            try {
+                collect = Files.lines(file.toPath())
+                        .map(s -> s.replace("import com.carl.touch.dto", "import com.carl.touch.android.moduleex.dto"))
+                        .map(s -> s.replace("import com.carl.touch.android.R", "import com.carl.touch.R"))
+                        .map(s -> s.replace("import android.support.v7.app.AppCompatActivity", "import androidx.appcompat.app.AppCompatActivity"))
+                        .map(s -> s.replace("import android.support.annotation.NonNull;", "import androidx.annotation.NonNull;"))
+                        .map(s -> s.replace("import android.support.annotation.CallSuper;", "import androidx.annotation.CallSuper;"))
+                        .map(s -> s.replace("import android.support.v4.app.Fragment;", "import androidx.fragment.app.Fragment;"))
+                        .map(s -> s.replace("import android.support.v4.app.FragmentManager;", "import androidx.fragment.app.FragmentManager;"))
+                        .map(s -> s.replace("import android.support.v7.app.ActionBar;", "import androidx.appcompat.app.ActionBar;"))
+                        .map(s -> s.replace("import android.support.annotation.Nullable;", "import androidx.annotation.Nullable;"))
+                        .map(s -> s.replace("import android.support.v4.app.FragmentTransaction;", "import androidx.fragment.app.FragmentTransaction;"))
+                        .map(s -> s.replace("import android.support.annotation.VisibleForTesting;", "import androidx.annotation.VisibleForTesting;"))
+                        .map(s -> s.replace("import android.support.v4.app.DialogFragment;", ""))
+                        .map(s -> s.replace("import android.support.v4.view.GravityCompat;", "import androidx.core.view.GravityCompat;"))
+                        .map(s -> s.replace("import android.support.v4.widget.DrawerLayout;", "import androidx.drawerlayout.widget.DrawerLayout;"))
+                        .map(s -> s.replace("import com.carl.touch.dao", "import com.carl.touch.android.moduleex.dao"))
+                        .map(s -> s.replace("import android.support.v4.content.LocalBroadcastManager;", "import androidx.localbroadcastmanager.content.LocalBroadcastManager;"))
+                        .collect(Collectors.toList());
+                Files.write(file.toPath(), collect);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }

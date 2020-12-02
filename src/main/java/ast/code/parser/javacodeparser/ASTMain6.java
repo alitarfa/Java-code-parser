@@ -1,13 +1,15 @@
 package ast.code.parser.javacodeparser;
 
 
-import ast.code.parser.javacodeparser.models.Information;
-import ast.code.parser.javacodeparser.service.PathResolver;
-import ast.code.parser.javacodeparser.service.ProjectParser;
+import ast.code.parser.javacodeparser.service.*;
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ASTMain6 {
 
@@ -18,6 +20,8 @@ public class ASTMain6 {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
+
+        Set<String> views = new HashSet<>();
 
         String projectPath = "/home/tarfa/Phd/carl-mob-app";
         String layoutPathDestination = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/res/layout";
@@ -36,6 +40,33 @@ public class ASTMain6 {
         // first step: find the Paths of All dependencies
         Set<String> paths = pathResolver.findPaths(projectPath, listClasses, 10);
 
+        // find other views
+        paths.forEach(file -> {
+            String content = null;
+            try {
+                content = FileHandler.read(file);
+                CompilationUnit result = ParserFactory.getInstance(content);
+                result.accept(new ASTVisitor() {
+                    @Override
+                    public boolean visit(TypeDeclaration node) {
+                        Set<String> fragmentView = ViewResolver.findFragmentView(node);
+                        views.addAll(fragmentView);
+                        return super.visit(node);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // find the path of view now
+        List<String> fragmentViewPaths = pathResolver.getPaths(projectPath, views).stream()
+                .filter(s -> !s.contains("build"))
+                .collect(Collectors.toList());
+        projectParser.copyToLayout(new HashSet<>(fragmentViewPaths), layoutPathDestination);
+        fragmentViewPaths.forEach(System.out::println);
+
+/*
         // second step: Create the packages
         String source = "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch";
         String target = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java/";
@@ -52,6 +83,7 @@ public class ASTMain6 {
         // find Activities views
         List<String> activityViewPaths = pathResolver.getPaths(projectPath, parse.getActivityViews());
         projectParser.copyTo(new HashSet<>(activityViewPaths), layoutPathDestination);
+*/
 
     }
 
