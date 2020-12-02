@@ -47,7 +47,6 @@ public class PathResolver {
             });
             listClasses.addAll(getJavaPath(projectPath, deps));
         }
-
         List<String> javaPath = getJavaPath(projectPath, deps);
         return javaPath.stream()
                 .filter(s -> !s.contains("build"))
