@@ -6,6 +6,7 @@ import ast.code.parser.javacodeparser.service.commands.*;
 import ast.code.parser.javacodeparser.typevisitors.ClassVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.stream.Stream;
 
 import static ast.code.parser.javacodeparser.models.ClassType.*;
 
+@Service
 public class ProjectParser {
 
     Information information = new Information();
