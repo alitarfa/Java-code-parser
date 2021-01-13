@@ -18,14 +18,17 @@ public class PathResolver {
     }
 
     private Set<String> getPath(List<File> projectFiles, String target) {
-        return projectFiles.stream()
-                .map(File::getAbsoluteFile)
-                .map(File::toString)
-                .filter(file -> file.contains(target))
-                .collect(Collectors.toSet());
+        Set<String> found = new HashSet<>();
+        projectFiles.forEach(file -> {
+            String name = file.getName();
+            if (name.equalsIgnoreCase(target + ".java")) {
+                found.add(file.getAbsolutePath());
+            }
+        });
+        return found;
     }
 
-    private List<String> getJavaPath(String projectPath, Set<String> classes) {
+    public List<String> getJavaPath(String projectPath, Set<String> classes) {
         List<File> projectFiles = FileHandler.readJavaFiles(new File(projectPath));
         return classes.stream()
                 .map(s -> getPath(projectFiles, s))

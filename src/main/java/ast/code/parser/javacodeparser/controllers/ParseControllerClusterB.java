@@ -15,9 +15,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/parser-project")
+@RequestMapping("/api/parser-project-2")
 @AllArgsConstructor
-public class ParseController {
+public class ParseControllerClusterB {
 
     private SimpMessageSendingOperations messagingTemplate;
     private ProjectParser projectParser;
@@ -30,26 +30,36 @@ public class ParseController {
 
         Set<String> views = new HashSet<>();
         String projectPath = "/home/tarfa/Phd/carl-mob-app";
-        String layoutPathDestination = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/res/layout";
-        Set<String> listClasses = new java.util.HashSet<>(Set.of(
-                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/InitializationActivity.java",
-                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/UpdateAppActivity.java",
-                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/VisuEntityDetailActivity.java",
-                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/utils/adapter/DetailFragmentPagerAdapter.java"
+        String clusterPath = "/home/tarfa/AndroidStudioProjects/MicroAppClusterCO/app/src/main/java/com/carl/touch";
+        String layoutPathDestination = "/home/tarfa/AndroidStudioProjects/MicroAppClusterCO/app/src/main/res/layout";
+
+        // list of classes
+        Set<String> listClasses = new HashSet<>(Set.of(
+                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/scan/ScanAPIType.java",
+                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/scan/ScanManagerFactory.java"
         ));
 
         PathResolver pathResolver = new PathResolver(projectParser);
         Set<String> paths = pathResolver.findPaths(projectPath, listClasses, 10);
         messagingTemplate.convertAndSend("/topic", "Generating Packages");
+
         String source = "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch";
-        String target = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java/";
+        String target = "/home/tarfa/AndroidStudioProjects/MicroAppClusterCO/app/src/main/java/";
+
         pathResolver.generatePackages(source, target);
-        projectParser.copyTo(paths, "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java");
+        projectParser.copyTo(paths, "/home/tarfa/AndroidStudioProjects/MicroAppClusterCO/app/src/main/java/");
         Information parse = projectParser.parse(listClasses);
         stringMap.put("dep", true);
         messagingTemplate.convertAndSend("/parsing-steps", stringMap);
 
 
+        // TODO: 03/12/2020 add the packages fix
+        //String projectPath = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java/com/carl/touch/";
+        projectParser.packageReplacement(projectPath);
+        stringMap.put("pack", true);
+        messagingTemplate.convertAndSend("/parsing-steps", stringMap);
+
+        // find the path of view now
         List<String> activityViewPaths = pathResolver.getPaths(projectPath, parse.getActivityViews());
         projectParser.copyTo(new HashSet<>(activityViewPaths), layoutPathDestination);
         paths.forEach(file -> {
@@ -69,8 +79,6 @@ public class ParseController {
                 e.printStackTrace();
             }
         });
-
-        // find the path of view now
         List<String> fragmentViewPaths = pathResolver.getPaths(projectPath, views).stream()
                 .filter(s -> !s.contains("build"))
                 .collect(Collectors.toList());
@@ -79,11 +87,7 @@ public class ParseController {
         stringMap.put("view", true);
         messagingTemplate.convertAndSend("/parsing-steps", stringMap);
 
-        // TODO: 03/12/2020 add the packages fix
-        stringMap.put("pack", true);
-        messagingTemplate.convertAndSend("/parsing-steps", stringMap);
 
-        // TODO: 03/12/2020 fish
         stringMap.put("fin", true);
         messagingTemplate.convertAndSend("/parsing-steps", stringMap);
 
