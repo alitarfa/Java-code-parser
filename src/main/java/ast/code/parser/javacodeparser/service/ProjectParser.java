@@ -126,7 +126,7 @@ public class ProjectParser {
             try {
                 Path sourcePath = new File(source).toPath();
                 String destinationName = source.split("/")[source.split("/").length - 1];
-                String newPath = source.replace("/home/tarfa/Phd/carl-mob-app/android/src/main/java", destination);
+                String newPath = source.replace("/home/tarfa/Carl-work/Carl-touch App/android/src/main/java", destination);
                 Path destinationPath = new File(newPath).toPath();
                 if (!destinationPath.toFile().exists()) {
                     Files.copy(sourcePath, destinationPath);

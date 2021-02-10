@@ -21,7 +21,19 @@ public class PathResolver {
         Set<String> found = new HashSet<>();
         projectFiles.forEach(file -> {
             String name = file.getName();
-            if (name.equalsIgnoreCase(target + ".java")) {
+            if (name.equalsIgnoreCase(target + ".java") || name.equalsIgnoreCase(target + ".tk")) {
+                found.add(file.getAbsolutePath());
+            }
+        });
+        return found;
+    }
+
+    private Set<String> getPathXMLfile(List<File> projectFiles, String target) {
+        Set<String> found = new HashSet<>();
+        projectFiles.forEach(file -> {
+            String name = file.getName();
+            System.out.println(name);
+            if (name.equalsIgnoreCase(target + ".xml")) {
                 found.add(file.getAbsolutePath());
             }
         });
@@ -34,16 +46,26 @@ public class PathResolver {
                 .map(s -> getPath(projectFiles, s))
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
-                .peek(System.out::println)
                 .collect(Collectors.toList());
     }
 
-    public Set<String> findPaths(String projectPath, Set<String> listClasses, int depth) {
+    public Set<String> findPaths(String projectPath, Set<String> listClasses, int depth, boolean exclude) {
         for (int i = 0; i < depth; i++) {
             listClasses.forEach(s -> {
                 try {
-                    Set<String> strings = projectParser.parse_v2(s);
+                    Set<String> strings;
+                    if (exclude) {
+                        // todo this is just an option
+                        strings = projectParser.parse_v2(s)
+                                .stream()
+                                .filter(s1 -> !s1.contains("Activity"))
+                                .collect(Collectors.toSet());
+                    } else {
+                        // todo this is just an option
+                        strings = projectParser.parse_v2(s);
+                    }
                     deps.addAll(strings);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -59,7 +81,7 @@ public class PathResolver {
     public List<String> getPaths(String projectPath, Set<String> fragmentViews) {
         List<File> projectFiles = FileHandler.readXmlFiles(new File(projectPath));
         return fragmentViews.stream()
-                .map(s -> getPath(projectFiles, s))
+                .map(s -> getPathXMLfile(projectFiles, s))
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());

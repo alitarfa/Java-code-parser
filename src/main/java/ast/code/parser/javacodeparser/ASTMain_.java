@@ -19,6 +19,7 @@ public class ASTMain_ {
 
         // TODO: 12/01/2021 Implement it
         String projectPath = "/home/tarfa/Phd/carl-mob-app/android/src/main/java";
+        String projectPathViews = "/home/tarfa/Phd/carl-mob-app/android/src";
         String path = "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/InitializationActivity.java";
         String content = FileHandler.read(path);
         CompilationUnit result = ParserFactory.getInstance(content);
@@ -31,7 +32,6 @@ public class ASTMain_ {
                 .filter(strings -> strings.size() > 0)
                 .collect(Collectors.toList());
         // to print the view
-        collect.forEach(System.out::println);
 
         // now i need to get the dependencies with filtering the activities
         ProjectParser projectParser = new ProjectParser();
@@ -42,11 +42,51 @@ public class ASTMain_ {
                 .collect(Collectors.toSet());
 
         // find the dependencies
-        strings.forEach(System.out::println);
-        System.out.println("**********************************");
         PathResolver pathResolver = new PathResolver(projectParser);
         Set<String> paths = new HashSet<>(pathResolver.getJavaPath(projectPath, strings));
-        paths.forEach(System.out::println);
-    }
 
+
+        // the found deps i need to find their deps
+        Set<String> finalDeps = pathResolver.findPaths(projectPath, paths, 10, true);
+
+        // find the fragments of the first cluster
+        Set<String> fragment = finalDeps
+                .stream()
+                .map(s -> s.split("/"))
+                .map(strings1 -> strings1[strings1.length - 1])
+                .filter(s -> s.contains("Fragment"))
+                .map(s -> s.split("\\."))
+                .map(strings1 -> strings1[0])
+                .collect(Collectors.toSet());
+
+        // find the path of each fragment
+        Set<String> fragmentsPaths = new HashSet<String>(pathResolver.getJavaPath(projectPath, fragment));
+
+        // find the view of fragments
+        Set<String> viewFragmentNames = new HashSet<>();
+        fragmentsPaths.forEach(s -> {
+            try {
+                String contentFragments = FileHandler.read(s);
+                CompilationUnit resultF = ParserFactory.getInstance(contentFragments);
+                ClassVisitors classVisitorFr = new ClassVisitors();
+                resultF.accept(classVisitorFr);
+                classVisitorFr.getClasses().forEach(typeDeclaration -> {
+                    Set<String> fragmentView = ViewResolver.findFragmentView(typeDeclaration);
+                    viewFragmentNames.addAll(fragmentView);
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        // find path views
+        List<String> viewFragmentPaths = pathResolver.getPaths(projectPathViews, viewFragmentNames);
+        viewFragmentPaths.forEach(System.out::println);
+
+        // construction
+        String source = "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch";
+        String target = "/home/tarfa/AndroidStudioProjects/MApp1/app/src/main/java/";
+        pathResolver.generatePackages(source, target);
+        projectParser.copyTo(finalDeps, target);
+
+    }
 }

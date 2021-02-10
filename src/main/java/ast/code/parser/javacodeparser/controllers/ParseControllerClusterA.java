@@ -39,7 +39,8 @@ public class ParseControllerClusterA {
         ));
 
         PathResolver pathResolver = new PathResolver(projectParser);
-        Set<String> paths = pathResolver.findPaths(projectPath, listClasses, 10);
+        Set<String> paths = pathResolver.findPaths(projectPath, listClasses, 10, false);
+
         messagingTemplate.convertAndSend("/topic", "Generating Packages");
         String source = "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch";
         String target = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java/";

@@ -23,13 +23,13 @@ public class ASTMain6 {
 
         Set<String> views = new HashSet<>();
 
-        String projectPath = "/home/tarfa/Phd/carl-mob-app";
+        String projectPath = "/home/tarfa/Carl-work/Carl-touch App";
         String layoutPathDestination = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/res/layout";
         Set<String> listClasses = new java.util.HashSet<>(Set.of(
-                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/InitializationActivity.java",
-                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/UpdateAppActivity.java",
-                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/activity/VisuEntityDetailActivity.java",
-                "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch/android/utils/adapter/DetailFragmentPagerAdapter.java"
+                "/home/tarfa/Carl-work/Carl-touch App/android/src/main/java/com/carl/touch/android/activity/InitializationActivity.java",
+                "/home/tarfa/Carl-work/Carl-touch App/android/src/main/java/com/carl/touch/android/activity/UpdateAppActivity.java",
+                "/home/tarfa/Carl-work/Carl-touch App/android/src/main/java/com/carl/touch/android/activity/VisuEntityDetailActivity.java",
+                "/home/tarfa/Carl-work/Carl-touch App/android/src/main/java/com/carl/touch/android/utils/adapter/DetailFragmentPagerAdapter.java"
         ));
 
         // todo Don't forget the Kotlin code
@@ -38,7 +38,7 @@ public class ASTMain6 {
         ProjectParser projectParser = new ProjectParser();
         PathResolver pathResolver = new PathResolver(projectParser);
         // first step: find the Paths of All dependencies
-        Set<String> paths = pathResolver.findPaths(projectPath, listClasses, 10);
+        Set<String> paths = pathResolver.findPaths(projectPath, listClasses, 10, false);
 
         // find other views
         paths.forEach(file -> {
@@ -60,14 +60,20 @@ public class ASTMain6 {
         });
 
         // find the path of view now
-        List<String> fragmentViewPaths = pathResolver.getPaths(projectPath, views).stream()
-                .filter(s -> !s.contains("build"))
-                .collect(Collectors.toList());
-        projectParser.copyToLayout(new HashSet<>(fragmentViewPaths), layoutPathDestination);
-        fragmentViewPaths.forEach(System.out::println);
+//        List<String> fragmentViewPaths = pathResolver.getPaths(projectPath, views).stream()
+//                .filter(s -> !s.contains("build"))
+//                .collect(Collectors.toList());
+//        projectParser.copyToLayout(new HashSet<>(fragmentViewPaths), layoutPathDestination);
+//        fragmentViewPaths.forEach(System.out::println);
+      /*  String source = "/home/tarfa/Carl-work/Carl-touch App/android/src/main/java/com/carl/touch";
+        String target = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java/";
+        pathResolver.generatePackages(source, target);*/
+
+        paths.forEach(System.out::println);
+        projectParser.copyTo(paths, "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java");
 
 /*
-        // second step: Create the packages
+        //second step: Create the packages
         String source = "/home/tarfa/Phd/carl-mob-app/android/src/main/java/com/carl/touch";
         String target = "/home/tarfa/AndroidStudioProjects/MicroAppClusterA/app/src/main/java/";
         pathResolver.generatePackages(source, target);
